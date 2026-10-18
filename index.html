@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101116">
+<title>Character Phone</title>
+<style>
+:root{--bg:#0b0d12;--surface:#171a22;--surface2:#222632;--text:#f5f6fb;--muted:#a7adbc;--accent:#b8a4ff;--line:#343846;--green:#b5e6c5;--phone-radius:38px}
+*{box-sizing:border-box}body{margin:0;background:#090a0f;color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}
+button,input,textarea,select{font:inherit}button{cursor:pointer;color:inherit;border:0}
+.stage{width:min(100%,420px);margin:auto}.intro{display:flex;justify-content:space-between;align-items:center;margin:0 4px 12px}.intro small{color:var(--muted);letter-spacing:.12em;text-transform:uppercase}.intro h1{font-size:17px;margin:3px 0 0}.device{height:min(820px,calc(100dvh - 92px));min-height:610px;width:100%;border:7px solid #30323b;border-radius:var(--phone-radius);overflow:hidden;position:relative;background:#101116;box-shadow:0 25px 80px #0009,inset 0 0 0 1px #ffffff16}
+.status{height:36px;display:flex;align-items:center;justify-content:space-between;padding:0 23px;font-size:11px;font-weight:700;position:absolute;z-index:5;top:0;left:0;right:0;background:transparent}.status .symbols{letter-spacing:2px}.screen{height:100%;position:relative;overflow:hidden;background:linear-gradient(145deg,#1b1c27,#11131b 60%,#20212c)}.wallpaper{position:absolute;inset:0;background:radial-gradient(ellipse at 25% 20%,#6d536d 0,transparent 42%),radial-gradient(ellipse at 80% 78%,#343b59 0,transparent 43%),linear-gradient(150deg,#181923,#0c0e14 70%);transition:background .25s}
+.lock{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;padding:72px 24px 30px;text-align:center;background:linear-gradient(#0001,#0004);transition:transform .35s,opacity .35s}.lock.hidden{transform:translateY(-105%);opacity:0;pointer-events:none}.lock .date{font-size:13px;color:#f4eaf4;margin-top:26px}.clock{font-size:76px;letter-spacing:-5px;font-weight:250;line-height:1.1;margin-top:10px;text-shadow:0 2px 25px #0004}.lock .quote{margin-top:auto;margin-bottom:40px;max-width:250px;color:#eee8f4;font-size:13px;line-height:1.6}.unlock{border:1px solid #ffffff6b;background:#ffffff1a;backdrop-filter:blur(12px);border-radius:28px;padding:12px 25px;font-size:13px}.lock-hint{font-size:10px;color:#ffffffad;margin-top:13px}
+.home{position:absolute;inset:36px 0 0;padding:18px 18px 30px;display:flex;flex-direction:column;opacity:1;transition:opacity .2s}.home.hidden{opacity:0;pointer-events:none}.greeting{font-size:12px;color:#e1dbea}.charname{font-size:28px;font-weight:650;margin:4px 0 16px;letter-spacing:-.8px}.widget{border:1px solid #ffffff20;background:#ffffff13;backdrop-filter:blur(14px);border-radius:23px;padding:16px;margin-bottom:23px}.widget-top{display:flex;justify-content:space-between;font-size:11px;color:#d9d3e3}.widget .widget-main{font-size:19px;font-weight:600;margin-top:8px}.widget .widget-sub{font-size:11px;color:#d1ccdb;margin-top:4px}.apps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px 8px}.app{display:flex;flex-direction:column;align-items:center;gap:7px;background:transparent;padding:0;min-width:0}.app-icon{width:53px;height:53px;border-radius:17px;display:grid;place-items:center;font-size:24px;box-shadow:0 5px 15px #0002}.app span:last-child{font-size:10px;color:#f2eff8;white-space:nowrap}.dock{margin-top:auto;background:#ffffff1a;border:1px solid #ffffff18;backdrop-filter:blur(20px);border-radius:23px;padding:11px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.dock .app-icon{width:47px;height:47px}.nav{height:19px;position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:center;align-items:center;z-index:8;background:linear-gradient(transparent,#0001)}.nav:after{content:"";width:108px;height:4px;border-radius:9px;background:#ffffffbd}.appview{position:absolute;inset:0;z-index:4;background:#f4f5f8;color:#181a20;display:flex;flex-direction:column;transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1);border-radius:25px 25px 0 0;overflow:hidden}.appview.open{transform:translateY(0)}.appbar{padding:52px 20px 15px;display:flex;align-items:center;gap:13px;background:#f4f5f8;position:relative}.back{width:34px;height:34px;border-radius:50%;background:#e5e7ed;color:#292b33;font-size:21px}.appbar h2{font-size:22px;margin:0;font-weight:700;letter-spacing:-.7px}.appbar small{display:block;color:#7d8190;font-size:11px;margin-top:3px}.appcontent{padding:0 18px 28px;overflow:auto;flex:1}.pill{background:#e6e0fa;color:#57418c;border-radius:99px;padding:6px 10px;font-size:11px}.section-label{font-size:12px;color:#767b89;margin:18px 2px 9px}.list{background:#fff;border:1px solid #e8e9ef;border-radius:18px;overflow:hidden}.listrow{padding:14px 13px;display:flex;align-items:center;gap:11px;border-bottom:1px solid #eff0f4}.listrow:last-child{border-bottom:0}.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#e7defd;font-weight:700;color:#54477b;flex-shrink:0}.rowmain{flex:1;min-width:0}.rowmain strong{font-size:13px;display:block}.rowmain small{font-size:11px;color:#828695;display:block;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rowtime{font-size:10px;color:#969aa5;align-self:flex-start}.bubble{max-width:84%;padding:11px 13px;border-radius:17px;margin:9px 0;font-size:13px;line-height:1.5;background:#e8eaf0}.bubble.me{margin-left:auto;background:#d9e8ff;border-bottom-right-radius:5px}.bubble.them{border-bottom-left-radius:5px}.chat-input{display:flex;gap:8px;padding:10px 14px 30px;background:#fff;border-top:1px solid #e9eaf0}.chat-input input{min-width:0;flex:1;border:0;background:#f0f1f5;border-radius:22px;padding:11px 13px;color:#20212a;outline:none}.send{background:#4c5c9a;color:white;border-radius:50%;width:39px;height:39px}.note{width:100%;border:1px solid #e5e7ed;border-radius:16px;padding:13px;background:#fff;color:#20212a;margin-bottom:10px}.note input,.note textarea{display:block;width:100%;border:0;outline:none;color:inherit;background:transparent}.note input{font-weight:700;margin-bottom:8px}.note textarea{resize:vertical;min-height:70px;font-size:13px;line-height:1.5}.primary{background:#252a3a;color:#fff;border-radius:13px;padding:12px 15px;width:100%;margin:8px 0}.settings-card{background:white;border-radius:18px;border:1px solid #e7e8ee;padding:15px;margin-bottom:12px}.settings-card label{font-size:12px;color:#777c89;display:block;margin-bottom:9px}.settings-card select,.settings-card input{width:100%;border:1px solid #dadde6;border-radius:12px;padding:12px;background:#f8f9fc;color:#1d2029}.settings-row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid #eeeef3;font-size:13px}.settings-row:last-child{border-bottom:0}.switch{background:#d5d8e2;border-radius:99px;width:42px;height:24px;padding:3px;display:flex;align-items:center}.switch:after{content:"";width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0002}.switch.on{background:#7563b6;justify-content:flex-end}.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.photo{aspect-ratio:1;border-radius:16px;padding:12px;display:flex;flex-direction:column;justify-content:flex-end;color:white;font-size:12px;background:linear-gradient(145deg,#8b758e,#252b40)}.photo:nth-child(2){background:linear-gradient(145deg,#c1a0a2,#4a3445)}.photo:nth-child(3){background:linear-gradient(145deg,#7c8e9d,#242f43)}.photo:nth-child(4){background:linear-gradient(145deg,#b2a18b,#443e37)}.socialpost{background:white;border:1px solid #e8e9ef;border-radius:17px;margin-bottom:12px;overflow:hidden}.posthead{display:flex;align-items:center;gap:9px;padding:13px}.postimage{height:185px;background:radial-gradient(circle at 65% 25%,#a48d9f,transparent 40%),linear-gradient(135deg,#303345,#10121a);display:grid;place-items:center;font-size:48px}.postbody{padding:12px;font-size:12px;line-height:1.6}.toast{position:absolute;z-index:10;bottom:35px;left:50%;transform:translateX(-50%);background:#262833;color:white;padding:10px 14px;border-radius:99px;font-size:11px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}.toast.show{opacity:1}.device.samsung{--phone-radius:34px}.device.iphone{--phone-radius:43px}.device.samsung .status{font-size:12px}.device.samsung .widget{border-radius:26px}.device.iphone .home{padding-top:22px}.device.iphone .app-icon{border-radius:14px}.device.iphone .dock{border-radius:27px}.device.iphone .status:before{content:"";position:absolute;top:5px;left:50%;transform:translateX(-50%);height:20px;width:100px;background:#050506;border-radius:20px}.device.iphone .status{padding-top:4px}.device.samsung .lock{padding-top:78px}.device.samsung .clock{font-size:82px;font-weight:300;letter-spacing:-4px}.device.samsung .unlock{border-radius:18px}.device.samsung .appbar{padding-top:47px}.device.samsung .appbar h2{font-size:24px}.device.samsung .nav:after{width:85px;height:4px}.device.samsung .app-icon{border-radius:18px}
+@media(max-width:460px){body{padding:0;background:#101116}.stage{width:100%;}.intro{display:none}.device{height:100dvh;min-height:570px;border-width:0;border-radius:0;box-shadow:none}.device.samsung{--phone-radius:0}.device.iphone{--phone-radius:0}.screen{border-radius:0}.appview{border-radius:25px 25px 0 0}}
+</style>
+</head>
+<body>
+<main class="stage">
+  <header class="intro"><div><small>CHARACTER DEVICE</small><h1>캐릭터 휴대폰</h1></div><span class="pill">인터랙티브 데모</span></header>
+  <section class="device samsung" id="device">
+    <div class="screen">
+      <div class="wallpaper" id="wallpaper"></div>
+      <div class="status"><span id="statusTime">9:41</span><span class="symbols">▮▮▮  ◉  ▰</span></div>
+      <section class="lock" id="lock">
+        <div class="date" id="lockDate">10월 19일 월요일</div>
+        <div class="clock" id="clock">09:41</div>
+        <div class="quote" id="lockQuote">읽지 않은 메시지 3개<br>화면을 열어 확인해.</div>
+        <button class="unlock" id="unlock">화면 잠금 해제 ↑</button>
+        <div class="lock-hint">탭해서 휴대폰 열기</div>
+      </section>
+      <section class="home hidden" id="home">
+        <div class="greeting">월요일 · 오늘도 조용한 하루</div>
+        <div class="charname" id="charname">강민철</div>
+        <div class="widget"><div class="widget-top"><span>오늘의 기록</span><span>● ● ●</span></div><div class="widget-main" id="widgetMain">읽지 않은 메시지 3개</div><div class="widget-sub">마지막 활동 · 오늘 오전 08:52</div></div>
+        <div class="apps" id="apps"></div>
+        <div class="dock" id="dock"></div>
+      </section>
+      <section class="appview" id="appview">
+        <header class="appbar"><button class="back" id="back">‹</button><div><h2 id="appTitle">메시지</h2><small id="appSubtitle">대화와 기록</small></div></header>
+        <div class="appcontent" id="appcontent"></div>
+        <div class="chat-input" id="chatInput" hidden><input id="messageInput" placeholder="메시지 입력..." maxlength="300"><button class="send" id="send">➤</button></div>
+      </section>
+      <div class="nav" id="nav"></div>
+      <div class="toast" id="toast"></div>
+    </div>
+  </section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const defaultSettings={name:"강민철",device:"samsung",quote:"읽지 않은 메시지 3개",lastActive:"오늘 오전 08:52"};
+let settings={...defaultSettings};
+try{settings={...settings,...JSON.parse(localStorage.getItem("characterPhoneSettings")||"{}")}}catch(e){}
+let messages=[
+ {who:"해수",text:"너 집이야?",me:false,time:"오전 08:40"},
+ {who:"me",text:"왜.",me:true,time:"오전 08:41"},
+ {who:"해수",text:"아니. 그냥 물어봤어.",me:false,time:"오전 08:42"},
+ {who:"me",text:"용건 없으면 끊어.",me:true,time:"오전 08:43"}
+];
+let notes=[{title:"",body:"12월 14일."},{title:"살 것",body:"담배\n물\n충전기"}];
+const appDefs=[
+ {id:"messages",label:"메시지",icon:"▤",color:"#d9e8ff",fg:"#31599b"},
+ {id:"calls",label:"전화",icon:"☎",color:"#d5f3dd",fg:"#2e8152"},
+ {id:"gallery",label:"사진첩",icon:"▧",color:"#f5d9e5",fg:"#a44e78"},
+ {id:"notes",label:"메모",icon:"▤",color:"#f7e9b9",fg:"#98751c"},
+ {id:"sns",label:"SNS",icon:"◎",color:"#eadcff",fg:"#8059b7"},
+ {id:"settings",label:"설정",icon:"⚙",color:"#e0e2e8",fg:"#4d5260"},
+ {id:"contacts",label:"연락처",icon:"♙",color:"#d9e5ff",fg:"#48669d"},
+ {id:"music",label:"음악",icon:"♫",color:"#f4d8d8",fg:"#a64b4b"}
+];
+const dockIds=["messages","calls","gallery","settings"];
+function saveSettings(){try{localStorage.setItem("characterPhoneSettings",JSON.stringify(settings))}catch(e){}}
+function applySettings(){
+ $("charname").textContent=settings.name||"강민철";
+ $("device").classList.toggle("samsung",settings.device==="samsung");
+ $("device").classList.toggle("iphone",settings.device==="iphone");
+ $("lockQuote").textContent=settings.quote||"화면을 열어 확인해.";
+ $("device").setAttribute("aria-label",(settings.device==="samsung"?"삼성 갤럭시":"아이폰")+" 캐릭터 휴대폰");
+ document.title=(settings.name||"캐릭터")+"의 휴대폰";
+}
+function makeApp(a){return `<button class="app" data-app="${a.id}" aria-label="${a.label}"><span class="app-icon" style="background:${a.color};color:${a.fg}">${a.icon}</span><span>${a.label}</span></button>`}
+function renderApps(){
+ $("apps").innerHTML=appDefs.filter(a=>!dockIds.includes(a.id)).map(makeApp).join("");
+ $("dock").innerHTML=appDefs.filter(a=>dockIds.includes(a.id)).map(makeApp).join("");
+ document.querySelectorAll("[data-app]").forEach(b=>b.addEventListener("click",()=>openApp(b.dataset.app)));
+}
+function openApp(id){
+ const a=appDefs.find(x=>x.id===id); if(!a)return;
+ $("appTitle").textContent=a.label;$("appSubtitle").textContent=settings.device==="samsung"?"Galaxy · One UI":"iPhone · iOS";
+ $("appcontent").innerHTML=""; $("chatInput").hidden=id!=="messages";
+ const c=$("appcontent");
+ if(id==="messages")renderMessages();
+ else if(id==="calls")c.innerHTML=`<div class="section-label">최근 통화</div><div class="list">${[["나해수","오늘 오전 08:43","↙ 부재중 전화"],["알 수 없는 번호","어제 오후 11:18","↗ 발신 통화"],["나해수","10월 17일","↙ 수신 통화"],["현장 반장","10월 16일","↗ 발신 통화"]].map((x,i)=>`<div class="listrow"><div class="avatar">${i===0?"해":i===1?"?":"☎"}</div><div class="rowmain"><strong>${x[0]}</strong><small>${x[2]}</small></div><span class="rowtime">${x[1]}</span></div>`).join("")}</div>`;
+ else if(id==="gallery")c.innerHTML=`<div class="section-label">최근 항목 · 4개</div><div class="gallery">${["흐린 저녁","저장된 사진","오래된 집","12월 14일"].map((x,i)=>`<div class="photo"><span>${["☁","▧","⌂","✦"][i]}　${x}</span></div>`).join("")}</div><p style="font-size:11px;color:#777b87;line-height:1.6;margin:15px 3px">사진 타일은 예시 콘텐츠야. 실제 캐릭터 이미지로 바꾸려면 HTML의 gallery 항목을 수정하면 돼.</p>`;
+ else if(id==="notes")renderNotes();
+ else if(id==="sns")c.innerHTML=`<div class="section-label">프로필</div><div class="listrow" style="background:white;border-radius:16px;margin-bottom:13px"><div class="avatar" style="width:54px;height:54px">민</div><div class="rowmain"><strong>${escapeHtml(settings.name)}　·　@private</strong><small>게시물 3　 팔로워 128　 팔로잉 76</small></div></div>${["별일 없는 날.","12월 14일","저장하지 못한 사진"].map((t,i)=>`<article class="socialpost"><div class="posthead"><div class="avatar">${settings.name.slice(0,1)}</div><div class="rowmain"><strong>${escapeHtml(settings.name)}</strong><small>게시물 · ${i+1}</small></div>•••</div><div class="postimage">${["☾","⌂","▧"][i]}</div><div class="postbody">♡　○　↗<br>${t}</div></article>`).join("")}`;
+ else if(id==="settings")renderSettings();
+ else if(id==="contacts")c.innerHTML=`<div class="section-label">즐겨찾기</div><div class="list">${[["나해수","해"],["현장 반장","현"],["병원","+82"]].map(x=>`<div class="listrow"><div class="avatar">${x[1]}</div><div class="rowmain"><strong>${x[0]}</strong><small>연락처 정보</small></div></div>`).join("")}</div>`;
+ else if(id==="music")c.innerHTML=`<div style="text-align:center;padding:28px 12px"><div style="height:220px;border-radius:22px;background:linear-gradient(145deg,#4a455d,#171923);display:grid;place-items:center;font-size:66px">♫</div><h3 style="margin-bottom:4px">${escapeHtml(settings.name)}의 플레이리스트</h3><p style="font-size:12px;color:#858a97">저장된 음악 · 12곡</p><button class="primary" id="playMusic">▶　재생</button><p style="font-size:11px;color:#888">데모 화면이며 실제 음악은 재생하지 않아.</p></div>`;
+ $("appview").classList.add("open");
+ if(id==="music")$("playMusic").onclick=()=>toast("재생 UI 데모야. 실제 오디오 파일은 연결되지 않았어.");
+}
+function renderMessages(){
+ $("appcontent").innerHTML=`<div class="section-label">나해수</div><div id="chatThread"></div>`;
+ const t=$("chatThread");
+ t.innerHTML=messages.map(m=>`<div class="bubble ${m.me?"me":"them"}">${escapeHtml(m.text)}<div style="font-size:9px;color:#7e8492;text-align:right;margin-top:4px">${m.time}</div></div>`).join("");
+ t.scrollTop=t.scrollHeight;
+}
+function renderNotes(){
+ $("appcontent").innerHTML=`<div class="section-label">내 메모</div><div id="notesList"></div><button class="primary" id="addNote">＋ 새 메모</button>`;
+ function paint(){ $("notesList").innerHTML=notes.map((n,i)=>`<div class="note"><input aria-label="메모 제목" placeholder="제목 없음" value="${escapeAttr(n.title)}" data-title="${i}"><textarea aria-label="메모 내용" placeholder="내용을 입력해..." data-body="${i}">${escapeHtml(n.body)}</textarea><button data-delete="${i}" style="background:#f1e8eb;color:#a04d63;border-radius:9px;padding:7px 10px;font-size:11px">삭제</button></div>`).join("");document.querySelectorAll("[data-title]").forEach(el=>el.oninput=()=>{notes[+el.dataset.title].title=el.value});document.querySelectorAll("[data-body]").forEach(el=>el.oninput=()=>{notes[+el.dataset.body].body=el.value});document.querySelectorAll("[data-delete]").forEach(el=>el.onclick=()=>{notes.splice(+el.dataset.delete,1);paint()})}
+ paint();$("addNote").onclick=()=>{notes.unshift({title:"",body:""});paint()};
+}
+function renderSettings(){
+ const c=$("appcontent");
+ c.innerHTML=`<div class="section-label">기기 설정</div>
+ <div class="settings-card"><label for="deviceSelect">휴대폰 기종</label><select id="deviceSelect"><option value="samsung" ${settings.device==="samsung"?"selected":""}>삼성 갤럭시 · One UI</option><option value="iphone" ${settings.device==="iphone"?"selected":""}>애플 아이폰 · iOS 스타일</option></select><p style="font-size:11px;color:#858a97;line-height:1.5;margin:10px 0 0">기종을 바꾸면 상태 표시줄, 잠금화면, 모서리와 앱 아이콘 스타일이 변경돼.</p></div>
+ <div class="settings-card"><label for="nameInput">캐릭터 이름</label><input id="nameInput" maxlength="24" value="${escapeAttr(settings.name)}"><button class="primary" id="saveSettings">변경사항 저장</button></div>
+ <div class="settings-card"><label for="quoteInput">잠금화면 문구</label><input id="quoteInput" maxlength="80" value="${escapeAttr(settings.quote)}"></div>
+ <div class="settings-card"><div class="settings-row"><span>잠금화면 알림 표시</span><button id="toggleNotice" class="switch on" aria-label="알림 표시 전환"></button></div><div class="settings-row"><span>배경화면 효과</span><button id="toggleWallpaper" class="switch on" aria-label="배경화면 효과 전환"></button></div></div>
+ <p style="font-size:11px;color:#898d99;line-height:1.6;padding:0 3px">이 데모의 설정과 메모는 이 브라우저에 저장돼. 캐릭터 데이터는 실제 전화나 메시지에 연결되지 않아.</p>`;
+ $("deviceSelect").onchange=e=>{settings.device=e.target.value;saveSettings();applySettings();toast(settings.device==="samsung"?"삼성 갤럭시 · One UI 적용":"아이폰 스타일 적용")};
+ $("saveSettings").onclick=()=>{settings.name=$("nameInput").value.trim()||"강민철";settings.quote=$("quoteInput").value.trim()||"화면을 열어 확인해.";saveSettings();applySettings();toast("설정 저장 완료")};
+ $("toggleNotice").onclick=e=>{e.currentTarget.classList.toggle("on");$("lockQuote").style.opacity=e.currentTarget.classList.contains("on")?"1":"0";toast("알림 표시 설정 변경")};
+ $("toggleWallpaper").onclick=e=>{e.currentTarget.classList.toggle("on");$("wallpaper").style.filter=e.currentTarget.classList.contains("on")?"none":"grayscale(1)";toast("배경화면 효과 변경")};
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function escapeAttr(s){return escapeHtml(s)}
+function toast(s){const t=$("toast");t.textContent=s;t.classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove("show"),1800)}
+function closeApp(){$("appview").classList.remove("open")}
+function unlock(){$("lock").classList.add("hidden");$("home").classList.remove("hidden")}
+function lockPhone(){closeApp();$("home").classList.add("hidden");$("lock").classList.remove("hidden")}
+$("unlock").onclick=unlock;$("lock").addEventListener("click",e=>{if(e.target===$("lock")||e.target.classList.contains("clock")||e.target.classList.contains("date"))unlock()});
+$("back").onclick=closeApp;$("nav").onclick=()=>{if($("appview").classList.contains("open"))closeApp();else lockPhone()};
+$("send").onclick=()=>{const input=$("messageInput"),v=input.value.trim();if(!v)return;messages.push({who:"me",text:v,me:true,time:"방금"});input.value="";renderMessages()};
+$("messageInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("send").click()});
+function tick(){const d=new Date();const time=d.toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit",hour12:false});$("clock").textContent=time;$("statusTime").textContent=time;const days=["일요일","월요일","화요일","수요일","목요일","금요일","토요일"];$("lockDate").textContent=`${d.getMonth()+1}월 ${d.getDate()}일 ${days[d.getDay()]}`}
+applySettings();renderApps();tick();setInterval(tick,30000);
+</script>
+</body>
+</html>
